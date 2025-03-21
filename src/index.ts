@@ -11,31 +11,10 @@ const defaultCorsHeaders = {
 
 const defaultJsonHeaders = { 'Content-type': 'application/json' }
 
-const defaultNotfound = `<!DOCTYPE html>
-<html lang=en>
-  <head>
-    <meta charset=UTF-8>
-    <meta content="width=device-width,initial-scale=1"name=viewport>
-    <title>404 | Not Found</title>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <style>@font-face{font-family:"Exo 2";font-style:normal;font-weight:300 600;font-display:swap;src:url(https://fonts.gstatic.com/s/exo2/v24/7cHmv4okm5zmbtYoK-4W4nIp.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}body{font-family:"Exo 2",sans-serif;font-optical-sizing:auto;font-weight:300;font-style:normal}</style>
-  </head>
-  <body style=margin:0;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;user-select:none;background:white>
-    <article style=display:flex;gap:.8em;align-items:center>
-      <h1 style=font-size:1.6em;margin:0>404</h1>
-      <span style=width:1px;height:3rem;background:#000></span>
-      <p style="margin:0">This page could not be found</p>
-    </article>
-  </body>
-</html>`
-
-const credential = {
-    client_email: "firebase-adminsdk-q039q@web-application-5963b.iam.gserviceaccount.com",
-    private_key: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCyBokLOijVaxtm\nkL29IzXgrgEtTQezclBXm/FOYbGqG1+E9IBrFtprkviQOZq/GGNjw4+7u1cucjXg\n1/T/BZoz1KRtgbdjlCkYFbve/erGhBya4FBphk0KctElZe4y+KeDtSbkml5sLyme\nwFix55zrSe5q+ZOvuhZ9WLoJF053VQdBhrY6GJ7vFwq05BpmnG9oS+RJ3EBEYWWH\nladYkFUZyIgcKGpZf+laUSMh8pMGitvgzvI5GwL8JlmI5MfQgNIIqVrDjmhYK8Lu\nSZVXynuo0D15G6GFxEMx1iLH/PMrakwpYvW8COmZV1jA0E1o71czae2bJF0/9FGi\nTM/wgBydAgMBAAECggEAFNbygnOxtX/3AmvlpichxrYf0aV/hghW8taAqigCA/N1\n3ErB4KdZdLfM7Jctr/qDIfnR0MxWoYuBlps5JQRLH4+gGuiRJvFAWT8sEafALLJo\n5dFl4GB2EsfLh1j2CBX3CBIz5hVTAc+Ii/qgt1yxUBLEu9WQ7gR23v/8sRU/HHVP\n63G7Mx64mDxm0LZK+6obMg8m9AomKr+rO8MYx86OwV1me4B1QlAb8g3UIaxJdvXK\n0Qx441oaewpq7o8qLB4Q8zh9GpRRzwm4KKfe47Mz1yFqW1hsxVm765ejEKjC2pV7\nnQLBGgH0m7E1knE/r8RDLdGK9adgqpYuRL23tn+tmQKBgQDW55E9FVlU/viWLbo/\n2A6gShiSFSiZ55ajfGfrZq1CCrqiXeAD+lTSUE/lscdG0nss/aUJUhe3gRugqjLu\neSFfjB95VnnR6Ho6OT00AwZMh24DBUkFtAOeygY8sbBmPffKUTcCXGYsKQTqjMqN\njpEZIB2A9+lRP6YaC0h6tzYIdQKBgQDUEZfARmCuFrGg1IJ3qQ3vR8RRcLidbmh4\nO7yJQIB5i+ZeTzUHWjE/D1n4hbyXQDDTgcqI0DjVO21Lranw7IRK+eRXiLZws1T2\nGpkfHa/8bndgYErVfSDLeE2LkDX1iWdSay8b0Q4+R9OEx97eujGQHoDQI1C55cP0\n8AV17Tx+iQKBgEYdSy+ItZqbjXNB/BA0Z6E4S4fty09bVbSFNEqDN2fipD2xLxNd\nKytq9IZWWFPs/C8TmjLOS9qdDux+Wxue/Zp01xf5dMlddfNlFWjQy89QKD5oDQkF\nUGEQPLS0rH7PHPcvRClLCDLEN0xnHvbMWt69saKQP9k4UPMSV1ViTQi5AoGAMAok\nNDw9HnKpnmNFgtHbBD9fq4s7Zv5h0ArINNdVwzL75pVOz/GQglZ57SBujlzOMruO\nI9v3Y+ZoZeJbQuZxOYLORT4FBha5wl5YHYJeIXLsu/pUOXR0/2KrPlhWwN51d2gs\nbcK31Uf0FHoqdI39OEaQq5W0bcgs0cmlkwdA0vECgYEAm+A+GgP9lxdbZuM0BGTn\n5IE2GmR/5s55KNffBswqIvBSyHoF8tPAzV70Mg5KQxxx2nm1yL1tUH+1PFZCoNdn\nADVQeMC5Qprt/X0urJBC6EGO41+epgkS2DgxYgyAEJf1KtDbtnSCJuHjEFyBFJCr\nTGUzDbunTm40cZ5OObd+NU0=\n-----END PRIVATE KEY-----\n"
-}
+const defaultNotfound = atob('PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ZW4+CjxoZWFkPgogIDxtZXRhIGNoYXJzZXQ9VVRGLTg+CiAgPG1ldGEgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLGluaXRpYWwtc2NhbGU9MSJuYW1lPXZpZXdwb3J0PgogIDx0aXRsZT40MDQgfCBOb3QgRm91bmQ8L3RpdGxlPgogIDxsaW5rIHJlbD0ic2hvcnRjdXQgaWNvbiIgaHJlZj0iL2Zhdmljb24uaWNvIiB0eXBlPSJpbWFnZS94LWljb24iPgogIDxsaW5rIHJlbD0icHJlY29ubmVjdCIgaHJlZj0iaHR0cHM6Ly9mb250cy5nc3RhdGljLmNvbSIgY3Jvc3NvcmlnaW4+CiAgPHN0eWxlPkBmb250LWZhY2V7Zm9udC1mYW1pbHk6IkV4byAyIjtmb250LXN0eWxlOm5vcm1hbDtmb250LXdlaWdodDozMDAgNjAwO2ZvbnQtZGlzcGxheTpzd2FwO3NyYzp1cmwoaHR0cHM6Ly9mb250cy5nc3RhdGljLmNvbS9zL2V4bzIvdjI0LzdjSG12NG9rbTV6bWJ0WW9LLTRXNG5JcC53b2ZmMikgZm9ybWF0KCJ3b2ZmMiIpO3VuaWNvZGUtcmFuZ2U6VSswMDAwLTAwRkYsVSswMTMxLFUrMDE1Mi0wMTUzLFUrMDJCQi0wMkJDLFUrMDJDNixVKzAyREEsVSswMkRDLFUrMDMwNCxVKzAzMDgsVSswMzI5LFUrMjAwMC0yMDZGLFUrMjBBQyxVKzIxMjIsVSsyMTkxLFUrMjE5MyxVKzIyMTIsVSsyMjE1LFUrRkVGRixVK0ZGRkR9Ym9keXtmb250LWZhbWlseToiRXhvIDIiLHNhbnMtc2VyaWY7Zm9udC1vcHRpY2FsLXNpemluZzphdXRvO2ZvbnQtd2VpZ2h0OjMwMDtmb250LXN0eWxlOm5vcm1hbH08L3N0eWxlPgo8L2hlYWQ+Cjxib2R5IHN0eWxlPW1hcmdpbjowO3dpZHRoOjEwMHZ3O2hlaWdodDoxMDB2aDtkaXNwbGF5OmZsZXg7YWxpZ24taXRlbXM6Y2VudGVyO2p1c3RpZnktY29udGVudDpjZW50ZXI7dXNlci1zZWxlY3Q6bm9uZTtiYWNrZ3JvdW5kOndoaXRlPgogIDxhcnRpY2xlIHN0eWxlPWRpc3BsYXk6ZmxleDtnYXA6LjhlbTthbGlnbi1pdGVtczpjZW50ZXI+CiAgICA8aDEgc3R5bGU9Zm9udC1zaXplOjEuNmVtO21hcmdpbjowPjQwNDwvaDE+CiAgICA8c3BhbiBzdHlsZT13aWR0aDoxcHg7aGVpZ2h0OjNyZW07YmFja2dyb3VuZDojMDAwPjwvc3Bhbj4KICAgIDxwIHN0eWxlPSJtYXJnaW46MCI+VGhpcyBwYWdlIGNvdWxkIG5vdCBiZSBmb3VuZDwvcD4KICA8L2FydGljbGU+CjwvYm9keT4KPC9odG1sPg==')
 
 export default {
+
     async fetch( request: Request, env ) {
 
         const link = new URL( request.url )
@@ -46,10 +25,9 @@ export default {
 
         if ( request.method == 'POST' && link.pathname == '/action/google/oauth2/token' && String( request.headers.get('content-type') || '' ).includes('application/json') ) {
             
-            // find token from KV and set it if not exists
             const store = await env.storage.get( 'prefix', 'json' ) as storageTokenSchema ?? {} as storageTokenSchema
             if ( !store.token || store.expire < Date.now() ) {
-                const token = await createRefreshToken( credential )
+                const token = await createRefreshToken( env.CREDENTIAL )
                 store.token = token
                 store.expire = Date.now() + 3598e3
                 await env.storage.put( 'prefix', JSON.stringify( store ) );
@@ -60,20 +38,24 @@ export default {
                 return new Response( null, { status: 400 } )
             }
 
-            const target = String( client_email ).replace(/[@.]/g, '-')
-
-            // find member token from realtime database
-            const request_store = await fetch(`https://web-application-5963b-default-rtdb.asia-southeast1.firebasedatabase.app/tokens/${target}.json`, {
+            const target = "https://web-application-5963b-default-rtdb.asia-southeast1.firebasedatabase.app/tokens/" + String( client_email ).replace(/[@.]/g, '-') + ".json"
+            
+            const request_store = await fetch( target, {
                 headers: { Authorization: `Bearer ${ store.token }` }
             }).then( e => e.json() ).catch( () => undefined ) as storageTokenSchema ?? {} as storageTokenSchema
             if ( !request_store.token || request_store.expire < Date.now() ) {
-                const token = await createRefreshToken({ client_email, private_key })
-                if ( !token ) {
+                let token: string
+                try {
+                    token = await createRefreshToken({ client_email, private_key })
+                    if ( !token ) {
+                        return new Response( null, { status: 400 } )
+                    }
+                } catch {
                     return new Response( null, { status: 400 } )
                 }
                 request_store.token = token
                 request_store.expire = Date.now() + 3598e3
-                await fetch(`https://web-application-5963b-default-rtdb.asia-southeast1.firebasedatabase.app/tokens/${target}.json`, {
+                await fetch( target, {
                     method: 'PUT',
                     body: JSON.stringify( request_store ),
                     headers: { Authorization: `Bearer ${ store.token }`, ...defaultJsonHeaders }
@@ -89,4 +71,5 @@ export default {
             : new Response( JSON.stringify({ status: 404, message: 'This page could not be found' }), { status: 404, headers: defaultJsonHeaders } )
 
     }
-} satisfies ExportedHandler<{ storage: KVNamespace<'prefix'> }>
+
+} satisfies ExportedHandler<{ storage: KVNamespace<'prefix'>, CREDENTIAL: GoogleServiceAccount }>
