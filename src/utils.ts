@@ -47,8 +47,8 @@ export async function createRefreshToken( credential: GoogleServiceAccount ): Pr
             assertion: await createWebtoken(),
             grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer"
         })
-    }).then( (e) => e.json() ).then(
-        ( response: GoogleAuthResponse ) => 'error' in response ? undefined : response.access_token
+    }).then( (e) => e.json() as Promise< GoogleAuthResponse > ).then(
+        ( response ) => 'error' in response ? undefined : response.access_token
     ).catch( () => undefined );
 
 }
